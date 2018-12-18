@@ -1,7 +1,3 @@
-# create-react-app React Project with Node Express Backend
-
-> Example on using create-react-app with a Node Express Backend
-
 ## Usage
 
 Install [nodemon](https://github.com/remy/nodemon) globally
