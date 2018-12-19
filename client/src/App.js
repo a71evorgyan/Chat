@@ -1,77 +1,30 @@
 import React, { Component } from 'react';
-
-import logo from './logo.svg';
-
 import './App.css';
+import {BrowserRouter as Router, Link, Redirect, Route, Switch} from "react-router-dom";
+import Chat from './components/Chat';
+import SignInForm from './components/SignInForm'
 
 class App extends Component {
   state = {
-    response: '',
-    post: '',
-    responseToPost: '',
-  };
-
-  componentDidMount() {
-    this.callApi()
-      .then(res => this.setState({ response: res.express }))
-      .catch(err => console.log(err));
+    username: ''
+  }
+  getUserName = (username) => {
+    this.setState({
+      username
+    })
   }
 
-  callApi = async () => {
-    const response = await fetch('/api/hello');
-    const body = await response.json();
-
-    if (response.status !== 200) throw Error(body.message);
-
-    return body;
-  };
-
-  handleSubmit = async e => {
-    e.preventDefault();
-    const response = await fetch('/api/world', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ post: this.state.post }),
-    });
-    const body = await response.text();
-
-    this.setState({ responseToPost: body });
-  };
-
   render() {
+    console.log("username", this.state.username);
     return (
+    <Router>
       <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-        <p>{this.state.response}</p>
-        <form onSubmit={this.handleSubmit}>
-          <p>
-            <strong>Post to Server:</strong>
-          </p>
-          <input
-            type="text"
-            value={this.state.post}
-            onChange={e => this.setState({ post: e.target.value })}
-          />
-          <button type="submit">Submit</button>
-        </form>
-        <p>{this.state.responseToPost}</p>
+        <Link to="/login" style={{marginRight:"16px"}} >Login</Link>
+        <Route exact path="/login" render={({history}) => <SignInForm getUserName={this.getUserName} history={history}/>}/>
+        <Route exact path="/chat" render={({history}) => <Chat username={this.state.username} history={history}/>}/>        
       </div>
-    );
+    </Router>
+    );    
   }
 }
 
